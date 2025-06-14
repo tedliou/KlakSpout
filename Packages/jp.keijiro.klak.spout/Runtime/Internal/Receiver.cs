@@ -84,10 +84,12 @@ sealed class Receiver : System.IDisposable
         // Lazy initialization:
         // We try creating a receiver texture every frame until getting a
         // correct one.
+        // Fix 'd3d11: failed to create 2D texture shader resource view id=xxx' issue
+        // issue link: https://github.com/keijiro/KlakSpout/issues/81#issuecomment-1067543009
         if (_texture == null && data.texturePointer != IntPtr.Zero)
             _texture = Texture2D.CreateExternalTexture
-              ((int)data.width, (int)data.height, TextureFormat.RGBA32,
-               false, false, data.texturePointer);
+              ((int)data.width, (int)data.height, TextureFormat.BGRA32,
+               false, true, data.texturePointer);
 
         // Update event for the render thread
         _event.IssuePluginEvent(EventID.UpdateReceiver);
